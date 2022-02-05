@@ -135,7 +135,7 @@ def sort_calendars(course1,course2,course3,course4,course5,course6,course7):
         if str(course1) in str(component.get('summary')):
             cal.add_component(component)
 
-            f = open('PS 3903.ics', 'wb')
+            f = open('Course1.ics', 'wb')
             f.write(cal.to_ical())
             f.close()
         else:
@@ -145,7 +145,7 @@ def sort_calendars(course1,course2,course3,course4,course5,course6,course7):
         if str(course2) in str(component.get('summary')):
             cal.add_component(component)
 
-            f = open('PS 3803.ics', 'wb')
+            f = open('Course2.ics', 'wb')
             f.write(cal.to_ical())
             f.close()
         else:
@@ -155,7 +155,7 @@ def sort_calendars(course1,course2,course3,course4,course5,course6,course7):
         if str(course3) in str(component.get('summary')):
             cal.add_component(component)
 
-            f = open('PS 4993.ics', 'wb')
+            f = open('Course3.ics', 'wb')
             f.write(cal.to_ical())
             f.close()
         else:
@@ -165,7 +165,7 @@ def sort_calendars(course1,course2,course3,course4,course5,course6,course7):
         if str(course4) in str(component.get('summary')):
             cal.add_component(component)
 
-            f = open('PS 1303.ics', 'wb')
+            f = open('Course4.ics', 'wb')
             f.write(cal.to_ical())
             f.close()
         else:
@@ -175,7 +175,7 @@ def sort_calendars(course1,course2,course3,course4,course5,course6,course7):
         if str(course5) in str(component.get('summary')):
             cal.add_component(component)
 
-            f = open('PS 1303.ics', 'wb')
+            f = open('Course5.ics', 'wb')
             f.write(cal.to_ical())
             f.close()
         else:
@@ -185,7 +185,7 @@ def sort_calendars(course1,course2,course3,course4,course5,course6,course7):
         if str(course6) in str(component.get('summary')):
             cal.add_component(component)
 
-            f = open('PS 1303.ics', 'wb')
+            f = open('Course6.ics', 'wb')
             f.write(cal.to_ical())
             f.close()
         else:
@@ -195,7 +195,7 @@ def sort_calendars(course1,course2,course3,course4,course5,course6,course7):
         if str(course7) in str(component.get('summary')):
             cal.add_component(component)
 
-            f = open('PS 1303.ics', 'wb')
+            f = open('Course7.ics', 'wb')
             f.write(cal.to_ical())
             f.close()
         else:
