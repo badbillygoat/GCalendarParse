@@ -17,27 +17,33 @@ import time
 import tkinter as tk
 from tkinter import ttk
 from tkinter import *
-# this is a function to get the user input from the text input box
+from tkinter import filedialog
 import requests
 
 root = Tk()
-
+global initial_calendar
 ###GUI SECTION###
 #################
 #################
-# This is the section of code which creates the main window
-root.geometry('616x424')
-root.configure(background='#FFD39B')
-root.title('Jordan\'s Canvas Calendar Builder!')
 
+# This is the section of code which creates the main window
+root.geometry('616x424') # Dimensions of GUI (in pixels) that opens
+root.configure(background='#D7D5D2') #background color of window
+root.title('Jordan\'s Canvas Calendar Builder!') #title that appears on top bar of window
+
+def UploadAction(event=None): #this function assigns the .ics file uploaded to the "initial_calendar" variable
+    global initial_calendar #declares that the "initia_calendar" var referenced below is the same variable as outside the function
+    initial_calendar = filedialog.askopenfilename() #intiates the file explorer for the user to choose a file
+    print('Selected:', initial_calendar) #verifies that the file was succesfully uploaded by printing the name of it
 
 # This is the section of code which creates a text input box and label for it for the URL, and each course name
-URL_label = tk.Label(text="Please Paste the Google Calendar URL \n from Canvas here:")
-URL_label.pack(fill=tk.BOTH, side=tk.TOP)
-URL_input=Entry(root)
-URL_input.pack(fill=tk.BOTH, side=tk.TOP)
+canvas_label = tk.Label(text="Please upload the .ics file downloaded from Canvas:")
+canvas_label.pack(fill=tk.BOTH, side=tk.TOP)
+button = tk.Button(root, text='Select File', command=UploadAction)
+button.pack()
 
-course_instructions = tk.Label(text="Please provide the names of your courses EXACTLY as they appear in \n the Canvas calendar (ex: PS 3903)")
+
+course_instructions = tk.Label(text="Please provide the names of your courses EXACTLY as they appear in \n the Canvas calendar- yes, capitalization matters (ex: PS 3903)")
 course_instructions.pack(fill=tk.BOTH, side=tk.TOP)
 course1label = tk.Label(text="Course #1 Name:")
 course1label.pack(fill=tk.BOTH, side=tk.TOP)
@@ -75,8 +81,8 @@ course7input=Entry(root)
 course7input.pack(fill=tk.BOTH, side=tk.TOP)
 
 # This is the section of code which creates a button to trigger the collection and parsing of data
-submitbutton = tk.Button(text="Press to Parse Calendar!")
-submitbutton.pack(fill=tk.BOTH, side=tk.TOP)
+submitbutton = tk.Button(root, text="Press to Parse Calendar!")
+submitbutton.pack()
 
 
 def open_calendar(filename):
@@ -86,102 +92,119 @@ def open_calendar(filename):
 ###DATA PARSING SECTION###
 ##########################
 ##########################
+
 #function that will be called to run the calendar sorting part of the program
 def sort_calendars(event):
-    #userinput = URL_input.get()
-    #userinput = "https://weber.instructure.com/feeds/calendars/user_3tv3cVJzAq5N0HlijsgPx7p3ysN49elcM6G3XuFA.ics"
+    #declares that the "initia_calendar" var referenced below is the same variable as outside the function
+    global initial_calendar
 
-
-    userinput1 = course1input.get()
-    if userinput1 != "":
-        course_cal_1 = Calendar()
-        course_cal_1.add("prodid", "-//{} Calendar//mxm.dk//".format(userinput1))
-    else:
-        print("User input 1 empty!")
-
+    userinput1 = course1input.get() #reads the text input by the user from the first course...
     userinput2 = course2input.get()
-    course_cal_2 = Calendar()
-
     userinput3 = course3input.get()
     userinput4 = course4input.get()
     userinput5 = course5input.get()
     userinput6 = course6input.get()
     userinput7 = course7input.get()
 
-    #set the variable "gcal" to read the calendar file opened from Canvas:
-    gcal = Calendar.from_ical(open_calendar("olivercalendar.ics").read())
+    if userinput1 != "": #if NOT nothing is input into the 1st course input, then open a calendar and assign it to "course_cal_1", and name it "[Course Name] Calendar"...
+        course_cal_1 = Calendar()
+        course_cal_1.add('prodid', "-//{} Calendar//mxm.dk//".format(userinput1))
+    if userinput2 != "":
+        course_cal_2 = Calendar()
+        course_cal_2.add("prodid", "-//{} Calendar//mxm.dk//".format(userinput2))
+    if userinput3 != "":
+        course_cal_3 = Calendar()
+        course_cal_3.add("prodid", "-//{} Calendar//mxm.dk//".format(userinput3))
+    if userinput4 != "":
+        course_cal_4 = Calendar()
+        course_cal_4.add("prodid", "-//{} Calendar//mxm.dk//".format(userinput4))
+    if userinput5 != "":
+        course_cal_5 = Calendar()
+        course_cal_5.add("prodid", "-//{} Calendar//mxm.dk//".format(userinput5))
+    if userinput6 != "":
+        course_cal_6 = Calendar()
+        course_cal_6.add("prodid", "-//{} Calendar//mxm.dk//".format(userinput6))
+    if userinput7 != "":
+        course_cal_7 = Calendar()
+        course_cal_7.add("prodid", "-//{} Calendar//mxm.dk//".format(userinput7))
+        
+    else:
+        print("User input empty!")
+    
 
-    #for loops that says "For each calendar event, if the title includes [course name], add it to this calendar:
+    #set the variable "gcal" to read the calendar file opened from Canvas:
+    gcal = Calendar.from_ical(open_calendar(initial_calendar).read())
+
+    #several for loops that say "For each calendar event, if the title includes [course name], add it to this calendar:
     for component in gcal.walk():
-        print(str(component.get('summary')))
         if userinput1.lower() in str(component.get('summary')).lower():
             course_cal_1.add_component(component)
-
-            # f = open('{}.ics'.format(userinput1), 'wb')
-            # f.write(cal.to_ical())
-            # f.close()
+            a = open(str(userinput1)+".ics", 'wb')
+            a.write(course_cal_1.to_ical())
+            a.close()
+        else:
+            continue
+        
+    for component in gcal.walk():
+        if userinput2 != "":
+            if userinput2.lower() in str(component.get('summary')).lower():
+                course_cal_2.add_component(component)
+                b = open(str(userinput2)+".ics", 'wb')
+                b.write(course_cal_2.to_ical())
+                b.close()
+        else:
+            continue
+    
+    for component in gcal.walk():
+        if userinput3 != "":
+            if userinput3.lower() in str(component.get('summary')).lower():
+                course_cal_3.add_component(component)
+                c = open(str(userinput3)+".ics", 'wb')
+                c.write(course_cal_3.to_ical())
+                c.close()
         else:
             continue
 
-    # for component in gcal.walk():
-    #     if str(course2) in str(component.get('summary')):
-    #         cal.add_component(component)
-    #
-    #         f = open('Course2.ics', 'wb')
-    #         f.write(cal.to_ical())
-    #         f.close()
-    #     else:
-    #         continue
-    #
-    # for component in gcal.walk():
-    #     if str(course3) in str(component.get('summary')):
-    #         cal.add_component(component)
-    #
-    #         f = open('Course3.ics', 'wb')
-    #         f.write(cal.to_ical())
-    #         f.close()
-    #     else:
-    #         continue
-    #
-    # for component in gcal.walk():
-    #     if str(course4) in str(component.get('summary')):
-    #         cal.add_component(component)
-    #
-    #         f = open('Course4.ics', 'wb')
-    #         f.write(cal.to_ical())
-    #         f.close()
-    #     else:
-    #         continue
-    #
-    # for component in gcal.walk():
-    #     if str(course5) in str(component.get('summary')):
-    #         cal.add_component(component)
-    #
-    #         f = open('Course5.ics', 'wb')
-    #         f.write(cal.to_ical())
-    #         f.close()
-    #     else:
-    #         continue
-    #
-    # for component in gcal.walk():
-    #     if str(course6) in str(component.get('summary')):
-    #         cal.add_component(component)
-    #
-    #         f = open('Course6.ics', 'wb')
-    #         f.write(cal.to_ical())
-    #         f.close()
-    #     else:
-    #         continue
-    #
-    # for component in gcal.walk():
-    #     if str(course7) in str(component.get('summary')):
-    #         cal.add_component(component)
-    #
-    #         f = open('Course7.ics', 'wb')
-    #         f.write(cal.to_ical())
-    #         f.close()
-    #     else:
-    #         continue
+    for component in gcal.walk():
+        if userinput4 != "":
+            if userinput4.lower() in str(component.get('summary')).lower():
+                course_cal_4.add_component(component)
+                d = open(str(userinput4)+".ics", 'wb')
+                d.write(course_cal_4.to_ical())
+                d.close()
+        else:
+            continue
+
+    for component in gcal.walk():
+        if userinput5 != "":
+            if userinput5.lower() in str(component.get('summary')).lower():
+                course_cal_5.add_component(component)
+                e = open(str(userinput5)+".ics", 'wb')
+                e.write(course_cal_5.to_ical())
+                e.close()
+        else:
+            continue
+
+    for component in gcal.walk():
+        if userinput6 != "":
+            if userinput6.lower() in str(component.get('summary')).lower():
+                course_cal_6.add_component(component)
+                f = open(str(userinput6)+".ics", 'wb')
+                f.write(course_cal_6.to_ical())
+                f.close()
+        else:
+            continue
+
+    for component in gcal.walk():
+        if userinput7 != "":
+            if userinput7.lower() in str(component.get('summary')).lower():
+                course_cal_7.add_component(component)
+                g = open(str(userinput7)+".ics", 'wb')
+                g.write(course_cal_7.to_ical())
+                g.close()
+        else:
+            continue
+    
     return
 
 #This function binds the "right clieck" key to running the "sort calendars" function when the button is pressed
